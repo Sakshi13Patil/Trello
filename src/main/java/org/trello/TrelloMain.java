@@ -1,5 +1,6 @@
 package org.trello;
 
+import org.trello.exceptions.TrelloException;
 import org.trello.service.TrelloManager;
 
 import java.util.Scanner;
@@ -15,7 +16,11 @@ public class TrelloMain {
             String input = scanner.nextLine();
             if (input.equals("EXIT"))
                 break;
-            trelloManager.performOperation(input);
+            try {
+                trelloManager.performOperation(input);
+            } catch (TrelloException e) {
+                System.out.println("Command is wrong");
+            }
         }
     }
 }

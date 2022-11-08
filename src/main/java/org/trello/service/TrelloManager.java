@@ -28,20 +28,20 @@ public class TrelloManager {
     }
 
     public void boardActivity(String[] input) {
-        if (input.length == 1)
+        if (input.length < 3)
             boardService.showAllBoards();
         else if (input[1].equals("CREATE"))
             boardService.createBoard(input[2]);
         else if (input[1].equals("DELETE"))
             boardService.deleteBoard(input[2]);
-        else if (input.length == 2)
-            boardService.showBoard(input[1]);
-        else if (input[2].equals("NAME"))
+        else if (input.length == 3)
+            boardService.showBoard(input[2]);
+        else if (input[2].equals("NAME") || input[2].equals("PRIVACY"))
             boardService.update(input[1], input[2], input[3]);
         else if (input[2].equals("ADD_MEMBER"))
             boardService.addMember(input[1], input[3]);
         else if (input[2].equals("REMOVE_MEMBER"))
-            boardService.addMember(input[1], input[3]);
+            boardService.removeMember(input[1], input[3]);
         else
             throw new TrelloException("Unidentified Command");
     }
@@ -51,8 +51,8 @@ public class TrelloManager {
             listsService.create(input[2], input[3]);
         else if (input[1].equals("DELETE"))
             listsService.deleteLists(input[2]);
-        else if (input.length == 2)
-            listsService.showLists(input[1]);
+        else if (input[0].equals("SHOW"))
+            listsService.showLists(input[2]);
         else
             throw new TrelloException("Unidentified Command");
     }
@@ -68,7 +68,7 @@ public class TrelloManager {
             cardsService.unassign(input[2]);
         else if (input[1].equals("MOVE"))
             cardsService.move(input[2], input[3]);
-        else if (input.length == 2)
+        else if (input[0].equals("SHOW"))
             cardsService.showCards(input[1]);
         else
             throw new TrelloException("Unidentified Command");

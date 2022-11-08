@@ -33,29 +33,21 @@ public class BoardService {
                 board.get().setPrivacy(PrivacyEnum.valueOf(value.toUpperCase()));
             else
                 throw new TrelloException("Cannot change attribute" + key);
-            System.out.println(board);
+            System.out.println(board.get());
         } else
             System.out.println("Board " + id + " does not exist");
     }
 
-    public void addMember(String id, String userId) {
-        Optional<Board> board = trelloRepository.getBoardById(id);
-        if (board.isPresent()) {
-            Optional<User> user = trelloRepository.getUserById(userId);
-            if (user.isPresent())
-                board.get().getMembers().add(user.get());
-            else
-                throw new TrelloException("User " + userId + " is not Present");
-            System.out.println(board);
-        } else
-            System.out.println("Board " + id + " does not exist");
+    public void addMember(String id, String email) {
+        Board board = trelloRepository.addUserToBoard(id, email);
+        System.out.println(board);
     }
 
 
-    public void removeMember(String id, String userId) {
+    public void removeMember(String id, String email) {
         Optional<Board> board = trelloRepository.getBoardById(id);
         if (board.isPresent()) {
-            board.get().setMembers(board.get().getMembers().stream().filter(obj -> !obj.getId().equals(userId)).collect(Collectors.toList()));
+            board.get().setMembers(board.get().getMembers().stream().filter(obj -> !obj.getEmail().equals(email)).collect(Collectors.toList()));
             System.out.println(board);
         } else
             System.out.println("Board " + id + " does not exist");
@@ -71,7 +63,7 @@ public class BoardService {
 
     public void showBoard(String id) {
         Optional<Board> board = trelloRepository.getBoardById(id);
-        System.out.println(board.isPresent() ? board : "Board " + id + " does not exist");
+        System.out.println(board.isPresent() ? board.get() : "Board " + id + " does not exist");
     }
 
     public void showAllBoards() {

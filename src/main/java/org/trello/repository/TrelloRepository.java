@@ -29,6 +29,9 @@ public class TrelloRepository {
         return users.stream().filter(obj -> obj.getId().equals(id)).findFirst();
     }
 
+    public Optional<User> getUserByEmail(String email) {
+        return users.stream().filter(obj -> obj.getEmail().equals(email)).findFirst();
+    }
     public List<Board> getAllBoards() {
         return boardList;
     }
@@ -72,6 +75,23 @@ public class TrelloRepository {
         cards.add(card);
         if (card.getAssignedUser() != null)
             users.add(card.getAssignedUser());
+    }
+
+    public Board addUserToBoard(String id, String email) {
+        Optional<Board> board = getBoardById(id);
+        if (board.isPresent()) {
+            Optional<User> user = getUserByEmail(email);
+            if (user.isPresent())
+                board.get().getMembers().add(user.get());
+            else {
+                User newUser =new User(email);
+                users.add(newUser);
+                board.get().getMembers().add(newUser);
+            }
+            return board.get();
+        }
+        else
+            throw new TrelloException("Board "+id+" is not present");
     }
 
     public Optional<Lists> getListByCard(Cards card) {

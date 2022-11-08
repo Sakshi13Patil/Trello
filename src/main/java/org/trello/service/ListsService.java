@@ -19,7 +19,7 @@ public class ListsService {
 
     public void showLists(String id) {
         Optional<Lists> lists = trelloRepository.getListsById(id);
-        System.out.println(lists.isPresent() ? lists : "List " + id + " does not exist");
+        System.out.println(lists.isPresent() ? lists.get() : "List " + id + " does not exist");
     }
 
     public void deleteLists(String id) {
